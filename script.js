@@ -1,4 +1,4 @@
-const scriptURL = 'https://script.google.com/macros/s/AKfycbyIPbIl4zojlCiH-r4HzvVLZfWyDEDh6Z5DJLhMnOrMdRxcbLu9tIDAmFBXD6CMDrc8/exec'; // <- Paste your deployed Google Apps Script Web App URL
+const scriptURL = 'https://script.google.com/macros/s/AKfycbyA3cPP7cMtPt3wu6jSZiVxCBWTrkdfv8FQ0S4-jgKLurznkvIJWGOSTxBKoDQ36QWB/exec'; // <- Paste your deployed Google Apps Script Web App URL
 
 document.getElementById('orderForm').addEventListener('submit', e => {
   e.preventDefault();
