@@ -8,14 +8,31 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
     <style>
         body {
             font-family: 'Poppins', sans-serif;
         }
     </style>
     <script>
-        // Define the Google Apps Script Web App URL here.  This is crucial.
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw9UT7xVDXNC2QVar_hsEJHU46p0E9YlhSqcbmhkapSXrvJNAqI3nn7Qu0alwUsWeGL/exec'; //  <===== REPLACE THIS WITH YOUR ACTUAL SCRIPT URL
+    import { initializeApp } from "firebase/app";
+    import { getAnalytics } from "firebase/analytics";
+        // Firebase configuration (replace with your actual config)
+        
+        const firebaseConfig = {
+            apiKey: "AIzaSyCerVueRYyw_cq3WpT_U2NH0yuma3zf-PU",
+            authDomain: "cafe-test-d5fdc.firebaseapp.com",
+            projectId: "cafe-test-d5fdc",
+            storageBucket: "cafe-test-d5fdc.firebasestorage.app",
+            messagingSenderId: "199696146328",
+            appId: "1:199696146328:web:499ed639bbff0e143495ed",
+            measurementId: "G-WQZZRQ0C5V"
+};
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
     </script>
 </head>
 <body class="bg-gray-100 p-8">
@@ -41,7 +58,7 @@
                     <option value="Latte">Latte</option>
                     <option value="Cappuccino">Cappuccino</option>
                     <option value="Espresso">Espresso</option>
-                    <option value="Iced Coffee">Iced Coffee</option>
+                     <option value="Iced Coffee">Iced Coffee</option>
                     <option value="Smoothie">Smoothie</option>
                 </select>
             </div>
@@ -83,7 +100,7 @@
             messageBox.classList.remove('hidden');
             setTimeout(() => {
                 messageBox.classList.add('hidden');
-            }, 3000); // Hide after 3 seconds
+            }, 3000);
         }
 
         function showError(message) {
@@ -91,7 +108,7 @@
             errorBox.classList.remove('hidden');
             setTimeout(() => {
                 errorBox.classList.add('hidden');
-            }, 3000); // Hide after 3 seconds
+            }, 3000);
         }
 
         orderForm.addEventListener('submit', (event) => {
@@ -101,11 +118,6 @@
             const email = document.getElementById('email').value;
             const drink = document.getElementById('drink').value;
             const quantity = document.getElementById('quantity').value;
-
-            if (!SCRIPT_URL) {
-                showError('Script URL is not defined.  Please update the SCRIPT_URL in the code.');
-                return;
-            }
 
             const orderData = {
                 name: name,
@@ -122,31 +134,16 @@
                 <p><strong>Quantity:</strong> ${quantity}</p>
             `;
 
-            // Send data to Google Sheets
-            fetch(SCRIPT_URL, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(orderData),
+            // Add data to Firebase Firestore
+            db.collection('orders') // Collection name is "orders"
+            .add(orderData)
+            .then(() => {
+                showMessage('Order placed successfully!');
+                orderForm.reset();
             })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                return response.json();
-            })
-            .then(data => {
-                if (data.result === 'success') {
-                    showMessage('Order placed successfully!');
-                    orderForm.reset(); // Clear the form
-                } else {
-                    showError(`Error: ${data.error || 'Failed to place order'}`);
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                showError('Failed to place order. Please check your internet connection and try again.');
+            .catch((error) => {
+                console.error('Error adding document: ', error);
+                showError('Failed to place order. Please try again.');
             });
         });
     </script>
