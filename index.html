@@ -1,21 +1,77 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Simple Cafe Order</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cafe Ordering System</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+    </style>
+    <script>
+        // Define the Google Apps Script Web App URL here.  This is crucial.
+        const SCRIPT_URL = 'YOUR_SCRIPT_URL'; //  <===== REPLACE THIS WITH YOUR ACTUAL SCRIPT URL
+    </script>
 </head>
-<body>
+<body class="bg-gray-100 p-8">
+    <h1 class="text-3xl font-semibold text-center text-blue-800 mb-6">Cafe Ordering System</h1>
 
-<h2>Order Your Coffee</h2>
+    <div id="order-form" class="bg-white rounded-lg shadow-md p-6 mb-8">
+        <h2 class="text-xl font-semibold text-gray-700 mb-4">Place Your Order</h2>
+        <form id="cafe-order-form" class="space-y-4">
+            <div>
+                <label for="name" class="block text-gray-600 text-sm font-bold mb-2">Name:</label>
+                <input type="text" id="name" name="name" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+            </div>
+            <div>
+                <label for="email" class="block text-gray-600 text-sm font-bold mb-2">Email:</label>
+                <input type="email" id="email" name="email" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+            </div>
+            <div>
+                <label for="drink" class="block text-gray-600 text-sm font-bold mb-2">Drink:</label>
+                <select id="drink" name="drink" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                    <option value="" disabled selected>Select a drink</option>
+                    <option value="Coffee">Coffee</option>
+                    <option value="Tea">Tea</option>
+                    <option value="Latte">Latte</option>
+                    <option value="Cappuccino">Cappuccino</option>
+                    <option value="Espresso">Espresso</option>
+                    <option value="Iced Coffee">Iced Coffee</option>
+                    <option value="Smoothie">Smoothie</option>
+                </select>
+            </div>
+            <div>
+                <label for="quantity" class="block text-gray-600 text-sm font-bold mb-2">Quantity:</label>
+                <input type="number" id="quantity" name="quantity" min="1" value="1" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+            </div>
+            <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Place Order</button>
+        </form>
+    </div>
 
-<form id="orderForm">
-  <input type="text" id="name" placeholder="Your Name" required><br>
-  <input type="text" id="order" placeholder="Your Order (e.g., Latte)" required><br>
-  <button type="submit">Place Order</button>
-</form>
+    <div id="order-summary" class="bg-white rounded-lg shadow-md p-6 mb-8">
+        <h2 class="text-xl font-semibold text-gray-700 mb-4">Order Summary</h2>
+        <div id="summary-content" class="text-gray-700">
+            <p>No orders yet.</p>
+        </div>
+    </div>
 
-<script src="script.js"></script>
+    <div id="message-box" class="fixed bottom-4 left-4 bg-green-100 border-l-4 border-green-500 text-green-700 p-4 rounded shadow-md hidden">
+        <strong class="font-bold">Success!</strong>
+        <span class="block sm:inline" id="message-text"></span>
+    </div>
 
+    <div id="error-box" class="fixed bottom-4 left-4 bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded shadow-md hidden">
+        <strong class="font-bold">Error!</strong>
+        <span class="block sm:inline" id="error-text"></span>
+    </div>
+
+    <script src="script.js">
+
+    </script>
 </body>
 </html>

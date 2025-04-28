@@ -1,27 +1,78 @@
-const scriptURL = 'https://script.google.com/macros/s/AKfycbyA3cPP7cMtPt3wu6jSZiVxCBWTrkdfv8FQ0S4-jgKLurznkvIJWGOSTxBKoDQ36QWB/exec'; // <- Paste your deployed Google Apps Script Web App URL
+const orderForm = document.getElementById('cafe-order-form');
+const summaryContent = document.getElementById('summary-content');
+const messageBox = document.getElementById('message-box');
+const messageText = document.getElementById('message-text');
+const errorBox = document.getElementById('error-box');
+const errorText = document.getElementById('error-text');
 
-document.getElementById('orderForm').addEventListener('submit', e => {
-  e.preventDefault();
-  
-  const name = document.getElementById('name').value;
-  const order = document.getElementById('order').value;
-  
-  const token = "ORD" + Math.floor(Math.random() * 1000000);
+function showMessage(message) {
+    messageText.textContent = message;
+    messageBox.classList.remove('hidden');
+    setTimeout(() => {
+        messageBox.classList.add('hidden');
+    }, 3000); // Hide after 3 seconds
+}
 
-  const data = { name, order, token };
+function showError(message) {
+    errorText.textContent = message;
+    errorBox.classList.remove('hidden');
+    setTimeout(() => {
+        errorBox.classList.add('hidden');
+    }, 3000); // Hide after 3 seconds
+}
 
-  fetch(scriptURL, {
-    method: 'POST',
-    body: JSON.stringify(data),
-    headers: { 'Content-Type': 'application/json' }
-  })
-  .then(response => response.text())
-  .then(result => {
-    alert(`Order placed! Your Order Token is: ${token}`);
-    document.getElementById('orderForm').reset();
-  })
-  .catch(error => {
-    alert('Something went wrong!');
-    console.error('Error!', error.message);
-  });
+orderForm.addEventListener('submit', (event) => {
+    event.preventDefault();
+
+    const name = document.getElementById('name').value;
+    const email = document.getElementById('email').value;
+    const drink = document.getElementById('drink').value;
+    const quantity = document.getElementById('quantity').value;
+
+    if (!SCRIPT_URL) {
+        showError('Script URL is not defined.  Please update the SCRIPT_URL in the code.');
+        return;
+    }
+
+    const orderData = {
+        name: name,
+        email: email,
+        drink: drink,
+        quantity: quantity,
+    };
+
+    // Display order summary
+    summaryContent.innerHTML = `
+        <p><strong>Name:</strong> ${name}</p>
+        <p><strong>Email:</strong> ${email}</p>
+        <p><strong>Drink:</strong> ${drink}</p>
+        <p><strong>Quantity:</strong> ${quantity}</p>
+    `;
+
+    // Send data to Google Sheets
+    fetch(SCRIPT_URL, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(orderData),
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data.result === 'success') {
+            showMessage('Order placed successfully!');
+            orderForm.reset(); // Clear the form
+        } else {
+            showError(`Error: ${data.error || 'Failed to place order'}`);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showError('Failed to place order. Please check your internet connection and try again.');
+    });
 });
