@@ -4,6 +4,8 @@ const messageBox = document.getElementById('message-box');
 const messageText = document.getElementById('message-text');
 const errorBox = document.getElementById('error-box');
 const errorText = document.getElementById('error-text');
+// Define the Google Apps Script Web App URL here.  This is crucial.
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw9UT7xVDXNC2QVar_hsEJHU46p0E9YlhSqcbmhkapSXrvJNAqI3nn7Qu0alwUsWeGL/exec';
 
 function showMessage(message) {
     messageText.textContent = message;
